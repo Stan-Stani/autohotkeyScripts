@@ -1,22 +1,45 @@
-#SingleInstance
+#Requires AutoHotkey v2.0
+#SingleInstance Force
 
 ; Set "Alt" mask key to something that's not "ctrl"
 A_MenuMaskKey := "vkE8"
 
-; LAlt + h sends left arrow
-<!h::Send "{Left}"
+; Global variable to track if hotkeys are active
+global hotkeyEnabled := true
 
-; LAlt + l sends right arrow
-<!l::Send "{Right}"
+; Hotkey to toggle the custom hotkeys on/off (Ctrl+Shift+F12)
+Hotkey("^+F12", ToggleHotkeys)
 
-; LAlt + k sends up arrow
-<!k::Send "{Up}"
+ToggleHotkeys(*) {
+    global hotkeyEnabled
+    hotkeyEnabled := !hotkeyEnabled
+    if (hotkeyEnabled) {
+        ToolTip("Hotkeys Enabled")
+    } else {
+        ToolTip("Hotkeys Disabled")
+    }
+    SetTimer () => ToolTip(), -1000
+}
 
-; LAlt + j sends down arrow
-<!j::Send "{Down}"
+; Custom hotkeys
+toggleHotkey(hotkeyStr, action) {
+    Hotkey(hotkeyStr, action, "On")
 
-; Ctrl + h to move word by word left
-^h::Send "^{Left}"
+    toggleHotkeyFunc(*) {
+        if (hotkeyEnabled) {
+            Hotkey(hotkeyStr, "On")
+        } else {
+            Hotkey(hotkeyStr, "Off")
+        }
+    }
 
-; Ctrl + l to move word by word right
-^l::Send "^{Right}"
+    toggleHotkeyFunc()
+    SetTimer(toggleHotkeyFunc, 100)
+}
+
+toggleHotkey("<!h", (*) => SendInput("{Left}"))
+toggleHotkey("<!l", (*) => SendInput("{Right}"))
+toggleHotkey("<!k", (*) => SendInput("{Up}"))
+toggleHotkey("<!j", (*) => SendInput("{Down}"))
+toggleHotkey("^h", (*) => SendInput("^{Left}"))
+toggleHotkey("^l", (*) => SendInput("^{Right}"))
