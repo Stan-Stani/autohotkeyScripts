@@ -7,8 +7,33 @@ A_MenuMaskKey := "vkE8"
 ; Global variable to track if hotkeys are active
 global hotkeyEnabled := true
 
-; Hotkey to toggle the custom hotkeys on/off (Ctrl+Shift+F12)
-Hotkey("^+F12", ToggleHotkeys)
+; Variables to track Caps Lock presses
+global lastCapsLockPress := 0
+global capsLockPressCount := 0
+
+CheckCapsLockPress() {
+    global lastCapsLockPress, capsLockPressCount
+    currentTime := A_TickCount
+    if (currentTime - lastCapsLockPress < 500) {
+        capsLockPressCount++
+    } else {
+        capsLockPressCount := 1
+    }
+    lastCapsLockPress := currentTime
+
+    if (capsLockPressCount >= 2) {
+        ToggleHotkeys()
+    }
+}
+
+CapsLock:: {
+    CheckCapsLockPress()
+    if (GetKeyState("CapsLock", "T"))
+        SetCapsLockState("Off")
+    else
+        SetCapsLockState("On")
+    return
+}
 
 ToggleHotkeys(*) {
     global hotkeyEnabled
