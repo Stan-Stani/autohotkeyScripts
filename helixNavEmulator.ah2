@@ -42,6 +42,7 @@ ToggleHotkeys(*) {
         ToolTip("Hotkeys Enabled")
     } else {
         ToolTip("Hotkeys Disabled")
+        SetTimer () => ToggleHotkeys(), -10000
     }
     SetTimer () => ToolTip(), -1000
 }
