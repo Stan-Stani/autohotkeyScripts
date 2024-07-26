@@ -36,36 +36,38 @@ CapsLock:: {
 }
 
 ToggleHotkeys(*) {
-    global hotkeyEnabled
-    hotkeyEnabled := !hotkeyEnabled
-    if (hotkeyEnabled) {
-        ToolTip("Hotkeys Enabled")
-    } else {
-        ToolTip("Hotkeys Disabled")
+    Suspend -1
+    if (A_IsSuspended) {
+        ToolTip("Hotkeys are suspended")
         SetTimer () => ToggleHotkeys(), -10000
     }
+    else
+        ToolTip("Hotkeys are active")
+
     SetTimer () => ToolTip(), -1000
+
 }
 
-; Custom hotkeys
-toggleHotkey(hotkeyStr, action) {
-    Hotkey(hotkeyStr, action, "On")
 
-    toggleHotkeyFunc(*) {
-        if (hotkeyEnabled) {
-            Hotkey(hotkeyStr, "On")
-        } else {
-            Hotkey(hotkeyStr, "Off")
-        }
+; Function to check if the Arc browser is the active window
+IsArcBrowserActive() {
+    winTitle := WinGetTitle("A")
+    return InStr(winTitle, "Arc")
+}
+
+; Ctrl + ; to Ctrl + L if Arc browser is active
+^;:: {
+    if (IsArcBrowserActive()) {
+        SendInput(">^l")
+
+    } else {
+        SendInput("^;")  ; Send the original hotkey if not in Arc browser
     }
-
-    toggleHotkeyFunc()
-    SetTimer(toggleHotkeyFunc, 100)
 }
 
-toggleHotkey("<!h", (*) => SendInput("{Left}"))
-toggleHotkey("<!l", (*) => SendInput("{Right}"))
-toggleHotkey("<!k", (*) => SendInput("{Up}"))
-toggleHotkey("<!j", (*) => SendInput("{Down}"))
-toggleHotkey("^h", (*) => SendInput("^{Left}"))
-toggleHotkey("^l", (*) => SendInput("^{Right}"))
+<!h:: SendInput("{Left}")
+<!l:: SendInput("{Right}")
+<!k:: SendInput("{Up}")
+<!j:: SendInput("{Down}")
+<^h:: SendInput("^{Left}")
+<^l:: SendInput("^{Right}")
