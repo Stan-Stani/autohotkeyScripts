@@ -111,18 +111,23 @@ ReopenTabWithSequence() {
 }
 
 
-
+; `Alt + h` is equivalent to Left arrow
 <!h:: SendInput("{Left}")
+; etc...
 <!l:: SendInput("{Right}")
 <!k:: SendInput("{Up}")
 <!j:: SendInput("{Down}")
 
+; `Ctrl + h` is equivalent to Ctrl + Left arrow
 <^h:: SendInput("^{Left}")
+; etc...
 <^l:: SendInput("^{Right}")
 <^k:: SendInput("{PgUp}")
 <^j:: SendInput("{PgDn}")
 
+; `Ctrl + Shift + h` is equivalent to Home
 <^+h:: SendInput("{Home}")
+; etc...
 <^+l:: SendInput("{End}")
 <^+k:: SendInput("^{Home}")
 <^+j:: SendInput("^{End}")
