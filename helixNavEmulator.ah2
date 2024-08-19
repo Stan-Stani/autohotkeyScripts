@@ -1,6 +1,14 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
+DebugMsg(msg) {
+    debugMode := false
+    if (debugMode) {
+        ToolTip(msg)
+        SetTimer () => ToolTip(), -3000  ; Clear tooltip after 3 seconds
+    }
+}
+
 ; Set "Alt" mask key to something that's not "ctrl"
 A_MenuMaskKey := "vkE8"
 
@@ -56,7 +64,7 @@ IsArcBrowserActive() {
 }
 
 ; Ctrl + ; to Ctrl + L if Arc browser is active
-^;:: {
+$^;:: {
     if (IsArcBrowserActive()) {
         SendInput(">^l")
 
@@ -65,9 +73,56 @@ IsArcBrowserActive() {
     }
 }
 
+
+; Define the hotkey: Alt + W
+$!w::  ManageArcTab()
+
+ManageArcTab() {
+    if (IsArcBrowserActive()) {
+        DebugMsg("Closing tab")
+
+        ; Close the current tab
+        SendInput "^w"
+       
+
+        Sleep 500
+
+        DebugMsg("Attempting to reopen tab")
+
+        ; Reopen the closed tab with the specific key sequence
+        ReopenTabWithSequence()
+
+    } else {
+        DebugMsg("Not in Arc - Sending original Alt+W")
+        SendInput "!w"
+    }
+}
+
+ReopenTabWithSequence() {
+    SendInput "{Ctrl down}"
+    Sleep 50
+    SendInput "{Shift down}"
+    Sleep 50
+    SendInput "t"
+    Sleep 50
+    SendInput "{Shift up}"
+    Sleep 50
+    SendInput "{Ctrl up}"
+}
+
+
+
 <!h:: SendInput("{Left}")
 <!l:: SendInput("{Right}")
 <!k:: SendInput("{Up}")
 <!j:: SendInput("{Down}")
+
 <^h:: SendInput("^{Left}")
 <^l:: SendInput("^{Right}")
+<^k:: SendInput("{PgUp}")
+<^j:: SendInput("{PgDn}")
+
+<^+h:: SendInput("{Home}")
+<^+l:: SendInput("{End}")
+<^+k:: SendInput("^{Home}")
+<^+j:: SendInput("^{End}")
