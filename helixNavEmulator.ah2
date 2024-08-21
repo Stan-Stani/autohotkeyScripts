@@ -119,6 +119,11 @@ ReopenTabWithSequence() {
 <!k:: SendInput("{Up}")
 <!j:: SendInput("{Down}")
 
+; `Alt + Shift + k` is equivalent to `Up arrow` * 4
+<!+k:: SendInput("{Up}{Up}{Up}{Up}")
+; etc...
+<!+j:: SendInput("{Down}{Down}{Down}{Down}")
+
 ; `Ctrl + h` is equivalent to `Ctrl + Left arrow`
 <^h:: SendInput("^{Left}")
 ; etc...
