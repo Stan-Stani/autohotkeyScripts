@@ -132,9 +132,9 @@ ReopenTabWithSequence() {
 <^j:: SendInput("{PgDn}")
 
 ;  `Shift + backspace` is equivalent to `Delete` key
-+BackSpace:: SendInput("{Del}")
+~+BackSpace:: SendInput("{Del}")
 ;  `Ctrl + shift + backspace` is equivalent to `Ctrl + Delete` key
-^+BackSpace:: SendInput ("^{Del}") 
+^~+BackSpace:: SendInput ("^{Del}") 
 
 ; `Ctrl + Shift + h` is equivalent to `Home`
 <^+h:: SendInput("{Home}")
