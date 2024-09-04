@@ -75,7 +75,7 @@ $^;:: {
 
 
 ; Define the hotkey: Alt + W
-$!w::  ManageArcTab()
+$!w:: ManageArcTab()
 
 ManageArcTab() {
     if (IsArcBrowserActive()) {
@@ -83,7 +83,7 @@ ManageArcTab() {
 
         ; Close the current tab
         SendInput "^w"
-       
+
 
         Sleep 500
 
@@ -134,7 +134,115 @@ ReopenTabWithSequence() {
 ;  `Shift + backspace` is equivalent to `Delete` key
 ~+BackSpace:: SendInput("{Del}")
 ;  `Ctrl + shift + backspace` is equivalent to `Ctrl + Delete` key
-^~+BackSpace:: SendInput ("^{Del}") 
+^~+BackSpace:: SendInput ("^{Del}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+global hotkeyEnabled := true
+
+; Variables to track Caps Lock presses
+global lastCtrlPress := 0
+global ctrlPressCount := 0
+
+CheckCtrlKeyPress() {
+    global lastCtrlPress, ctrlPressCount
+    currentTime := A_TickCount
+    if (currentTime - lastCtrlPress < 500) {
+        ctrlPressCount++
+    } else {
+        ctrlPressCount := 1
+    }
+    lastCtrlPress := currentTime
+
+    if (ctrlPressCount >= 2) {
+        ToggleHotkeyMode
+    }
+}
+
+CapsLock:: {
+    CheckCtrlKeyPress()
+    if (GetKeyState("Ctrl", "T"))
+        SetCapsLockState("Off")
+    else
+        SetCapsLockState("On")
+    return
+}
+
+; ToggleHotkeys(*) {
+;     Suspend -1
+;     if (A_IsSuspended) {
+;         ToolTip("Hotkeys are suspended")
+;         SetTimer () => ToggleHotkeys(), -10000
+;     }
+;     else
+;         ToolTip("Hotkeys are active")
+
+;     SetTimer () => ToolTip(), -1000
+
+; }
+
+
+
+
+
+
+
+
+
+
+
+
+global modeIsSelect := true
+global hotkeyCallbacks := Map()
+
+ToggleHotkeyMode() {
+    global modeIsSelect
+    modeIsSelect := !modeIsSelect
+
+
+    if (modeIsSelect) {
+        ToolTip("Select Mode")
+        SetCustomHotkey("<^+h", (*) => SendInput("<^+{Left}"))
+        SetCustomHotkey("<^+l", (*) => SendInput("<^+{Right}"))
+        SetCustomHotkey("<^+k", (*) => SendInput("<^+{Up}"))
+        SetCustomHotkey("<^+j", (*) => SendInput("<^+{Down}"))
+    } else {
+        SetCustomHotkey("<^+h", (*) => SendInput("{Home}"))
+        SetCustomHotkey("<^+l", (*) => SendInput("{End}"))
+        SetCustomHotkey("<^+k", (*) => SendInput("^{Home}"))
+        SetCustomHotkey("<^+j", (*) => SendInput("^{End}"))
+        ToolTip("Nav Mode")
+    }
+
+    SetTimer () => ToolTip(), -1000
+}
+
+SetCustomHotkey(hotkey, callback) {
+    hotkeyCallbacks[hotkey] := callback
+    Hotkey(hotkey, callback, "On")
+}
+
+; Example usage:
+SetCustomHotkey("<^+h", (*) => SendInput("{Home}"))
+SetCustomHotkey("<^+l", (*) => SendInput("{End}"))
+SetCustomHotkey("<^+k", (*) => SendInput("^{Home}"))
+SetCustomHotkey("<^+j", (*) => SendInput("^{End}"))
+
+; Toggle hotkeys with Ctrl+Alt+T
+^!t:: ChangeHotkeyFunction()
+
 
 ; `Ctrl + Shift + h` is equivalent to `Home`
 <^+h:: SendInput("{Home}")
