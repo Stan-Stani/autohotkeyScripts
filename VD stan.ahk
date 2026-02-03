@@ -20,7 +20,7 @@ SetControlDelay -1
 
 
 ;include the library
-#Include C:\Users\StanStanislaus\Documents\Stan\Utils\autohotkey\VD.ahk\VD.ahk
+#Include C:\Users\StanStanislaus\utils\autohotkey\VD.ahk\VD.ahk
 ; useful stuff
 ^#j:: VD.goToDesktopNum(1)
 ^#k:: VD.goToDesktopNum(2)
