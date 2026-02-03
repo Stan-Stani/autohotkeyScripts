@@ -5,7 +5,7 @@
 ; Remap Middle Mouse (Mouse 3) to Ctrl+F12 only when VS Code is active.
 ; (Ctrl+F12 is VS Code's default: Go to Implementation)
 #HotIf IsVSCodeActive()
-MButton::Send "^{F12}"
+MButton::Send "{LButton}^{F12}"
 #HotIf
 
 IsVSCodeActive() {
